@@ -1,0 +1,10 @@
+# raw client downloads — originals contain unblurred private data
+Client Feedback -*/
+Clients Wins -*/
+Short Forms-*/
+# source material & local backups
+*.pdf
+Colour.jpeg
+Message.jpeg
+_backup_v2/
+assets/manifest.json

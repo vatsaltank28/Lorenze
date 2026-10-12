@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Devereux Edits — High-Retention Video Editing</title>
+<meta name="description" content="Devereux Edits is a one-person video editing studio for gaming and creator channels. Roblox, Minecraft, podcasts, ranking videos and product ads — built for watch time.">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0b0d'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black,Arial' font-weight='900' font-size='30' fill='%233d6ef5'%3EDE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/video/minecraft-1.jpg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><span></span></div>
+<canvas id="spark" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="nav-wrap">
+  <nav class="nav">
+    <a href="#top" class="logo" aria-label="Devereux Edits home"><span class="mono-mark">DE</span><span class="logo-txt">DEVEREUX<em>EDITS</em></span></a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#wins">Results</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#contact" class="btn btn-blue btn-sm nav-cta">Start a project</a>
+    <button class="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu">
+    <a href="#work">Work</a><a href="#wins">Results</a><a href="#process">Process</a>
+    <a href="#reviews">Reviews</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    <a href="#contact" class="btn btn-blue">Start a project ↗</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="squares" aria-hidden="true"><canvas id="squares"></canvas></div>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="pill"><i class="dot" data-live-dot></i><span data-live-pill>Available for new projects</span></span>
+      <p class="eyebrow">Video editing &amp; post-production</p>
+      <h1 class="display split">
+        <span class="line">Your vision.</span>
+        <span class="line blue">Perfectly</span>
+        <span class="line">edited.</span>
+      </h1>
+      <span class="rule"></span>
+      <p class="lede">High-retention edits for gaming and creator channels — Roblox, Minecraft, podcasts, rankings and product ads. Every cut is built for watch time.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-blue magnet">Start a project <span class="arr">↗</span></a>
+        <a href="#work" class="btn btn-ghost magnet"><span class="play-mini">▶</span>View my work</a>
+      </div>
+    </div>
+
+    <div class="hero-media">
+      <div class="monitor">
+        <div class="monitor-top"><i class="dot"></i>Short on time? Watch this first.<span class="rec">REC</span></div>
+        <div class="reel" data-open="assets/video/minecraft-1.mp4" data-w="2560" data-h="1080" role="button" tabindex="0" aria-label="Play showreel with sound">
+          <video id="heroVideo" muted loop playsinline preload="none" poster="assets/video/minecraft-1.jpg" data-src="assets/video/minecraft-1.mp4"></video>
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <span class="reel-sound">🔊 Tap for sound</span>
+        </div>
+      </div>
+      <div class="timeline" aria-hidden="true">
+        <div class="tl-ruler"><span>00:00</span><span>00:15</span><span>00:30</span><span>00:45</span><span>01:00</span></div>
+        <div class="tl-track"><b>V2</b><div class="lane"><i style="left:12%;width:15%"></i><i style="left:48%;width:11%"></i><i style="left:72%;width:19%"></i></div></div>
+        <div class="tl-track"><b>V1</b><div class="lane full"><i style="left:0;width:24%"></i><i style="left:25%;width:19%"></i><i style="left:45%;width:13%"></i><i style="left:59%;width:17%"></i><i style="left:77%;width:23%"></i></div></div>
+        <div class="tl-track"><b>A1</b><div class="lane wave"></div></div>
+        <div class="playhead"><span class="tc">00:00:00:00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container stats-row">
+    <div class="stats">
+      <div class="stat"><strong><span class="count" data-to="10.4" data-dec="1">0</span>M</strong><span>Shorts views in 28 days</span></div>
+      <div class="stat"><strong><span class="count" data-to="12.3" data-dec="1">0</span>M</strong><span>Views on one channel</span></div>
+      <div class="stat"><strong>~<span class="count" data-to="10">0</span>m</strong><span>Average reply time</span></div>
+    </div>
+    <div class="tools">
+      <span>Tools I use</span>
+      <i class="tool t-pr" title="Adobe Premiere Pro"><img src="assets/icons/adobepremierepro.svg" alt="Premiere Pro" width="20" height="20"></i>
+      <i class="tool t-ae" title="Adobe After Effects"><img src="assets/icons/adobeaftereffects.svg" alt="After Effects" width="20" height="20"></i>
+      <i class="tool t-ps" title="Adobe Photoshop"><img src="assets/icons/adobephotoshop.svg" alt="Photoshop" width="20" height="20"></i>
+      <i class="tool t-dv" title="DaVinci Resolve"><img src="assets/icons/davinciresolve.svg" alt="DaVinci Resolve" width="20" height="20"></i>
+      <i class="tool t-cc" title="CapCut"><svg viewBox="0 0 24 24" width="20" height="20" aria-label="CapCut"><path fill="#fff" d="M3 6.2 12 10l9-3.8v3.1L15.6 12 21 14.7v3.1L12 14l-9 3.8v-3.1L8.4 12 3 9.3z"/><path fill="#fff" d="M3 4h4v2.4L3 8.1zM21 4h-4v2.4l4 1.7zM3 20h4v-2.4l-4-1.7zM21 20h-4v-2.4l4-1.7z" opacity=".55"/></svg></i>
+    </div>
+  </div>
+</section>
+
+<!-- NICHES MARQUEE -->
+<section class="niches" aria-label="Niches">
+  <div class="marquee" data-speed="38"><div class="marquee-track" id="nicheTrack"></div></div>
+</section>
+
+<!-- WHO -->
+<section class="who container" id="about">
+  <div class="who-card spot">
+    <div class="who-top">
+      <span class="who-avatar">LD</span>
+      <div><b>Lorenzo Devereux</b><small>Video editor · Buffalo, New York</small></div>
+    </div>
+    <div class="who-status"><i class="dot" data-live-dot></i><span data-live-status>Working now</span> · <span data-ny-time>--:--</span> in New York</div>
+    <ul class="facts">
+      <li><b>Hours</b><span><span data-hours>7 AM – 10 PM New York time</span>. No editing on weekends — bookings still open.</span></li>
+      <li><b>Replies</b><span>Usually about 10 minutes during working hours (an estimate, not a guarantee).</span></li>
+      <li><b>Payment</b><span>Full payment upfront: Card, PayPal, Crypto, Bank Transfer, Remitly.</span></li>
+    </ul>
+  </div>
+  <div class="who-copy">
+    <p class="eyebrow"><span class="secnum">01</span> Who you'll work with</p>
+    <h2 class="h2">One editor. <span class="blue">Zero hand-offs.</span></h2>
+    <p class="body">Devereux Edits is a premium one-person studio. You talk directly to the person cutting your video — no account managers, no rotating freelancers, no guessing who touched your timeline.</p>
+    <p class="body muted">I keep a limited client roster on purpose, so quality and deadlines hold every single upload.</p>
+    <div class="who-ctas">
+      <a href="#contact" class="btn btn-blue btn-sm">Book a free 15-min call</a>
+      <button class="btn btn-ghost btn-sm" data-copy="lorenzo_devereux"><img src="assets/icons/discord.svg" alt="" class="ico-inv" width="16" height="16">lorenzo_devereux</button>
+    </div>
+  </div>
+</section>
+
+<!-- SCROLL REVEAL STATEMENT -->
+<section class="statement container" aria-label="Philosophy">
+  <p class="scroll-words">Every frame has one job — earn the next one. Hooks that stop the scroll, pacing that holds it, and pattern breaks that keep viewers watching until the very last second.</p>
+</section>
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="container">
+    <div class="sec-head">
+      <p class="eyebrow"><span class="secnum">02</span> Selected work</p>
+      <h2 class="h2">Featured <span class="blue">edits.</span></h2>
+      <p class="body muted">A cross-section of formats and niches. Every card is a real edit — press play to watch it with sound.</p>
+    </div>
+    <div class="featured" id="featured"></div>
+
+    <div class="sec-head row mt">
+      <div><h2 class="h2">All short-form edits</h2></div>
+      <p class="hint"><span class="hint-fine">Hover to preview · </span>Click or tap to watch with sound</p>
+    </div>
+    <div class="tabs-row">
+      <div class="tabs" id="shortTabs" role="tablist" aria-label="Filter by niche"></div>
+      <div class="arrows"><button class="arrow" data-dir="-1" data-target="shortRail" aria-label="Previous">‹</button><button class="arrow" data-dir="1" data-target="shortRail" aria-label="Next">›</button></div>
+    </div>
+    <div class="filter-row">
+      <div class="fmt-filter" id="fmtFilter" role="group" aria-label="Filter by format"></div>
+    </div>
+    <div class="rail work-rail" id="shortRail" aria-live="polite"></div>
+
+    <div id="longWrap" hidden>
+      <div class="sec-head mt">
+        <h2 class="h2">Long-form edits</h2>
+        <p class="body muted">Full YouTube edits.</p>
+      </div>
+      <div class="rail long-rail" id="longRail"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENT WINS (pinned horizontal on desktop) -->
+<section class="wins" id="wins">
+  <div class="wins-pin">
+    <div class="container wins-head">
+      <p class="eyebrow"><span class="secnum">03</span> Case studies</p>
+      <h2 class="h2">Numbers that <span class="blue">moved.</span></h2>
+      <p class="body muted">Analytics from channels I edit for — with what each number measures and over which period. Open any card to see the original screenshot.</p>
+    </div>
+    <div class="wins-track" id="winsTrack"></div>
+    <div class="container wins-foot">
+      <p class="disclaimer">Results reflect each channel's performance during the stated period. Views, subscribers and revenue depend on many factors beyond editing and are not a guaranteed outcome.</p>
+      <a href="#contact" class="btn btn-ghost btn-sm" data-track="case_cta">Discuss a similar project ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="container process-grid">
+    <div class="process-visual">
+      <div class="stack">
+        <div class="stack-card"><span class="mono">BRIEF.txt</span><div class="bars"><i></i><i></i><i></i><i></i></div></div>
+        <div class="stack-card"><span class="mono">SCOPE · PRICE · DEADLINE</span><div class="graph"><svg viewBox="0 0 200 60"><polyline points="0,50 30,42 60,46 90,30 120,34 150,16 200,8"/></svg></div></div>
+        <div class="stack-card"><span class="mono">RAW_FOOTAGE.mp4</span><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="stack-card"><span class="mono">DRAFT_v1 → v2</span><div class="bars cut"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="stack-card"><span class="mono">FINAL_EXPORT ✓</span><div class="done">Ready to publish</div></div>
+      </div>
+    </div>
+    <div class="process-copy">
+      <p class="eyebrow"><span class="secnum">04</span> Process</p>
+      <h2 class="h2">How it works</h2>
+      <p class="body muted">What happens from your first message to the final export.</p>
+      <ol class="steps">
+        <li class="step active"><span class="num">01</span><div><h3>Submit your brief</h3><p>Use the estimator below or message me on Discord with your channel, the video you need and any reference videos.</p></div></li>
+        <li class="step"><span class="num">02</span><div><h3>Agree scope, price &amp; deadline</h3><p>I reply with a quote and next steps — usually within about 10 minutes in working hours. Payment is upfront; monthly setups start with a free 15-minute call.</p></div></li>
+        <li class="step"><span class="num">03</span><div><h3>Send footage &amp; assets</h3><p>Share your raw footage plus anything the edit needs — references, logos, music or notes.</p></div></li>
+        <li class="step"><span class="num">04</span><div><h3>Review the draft</h3><p>Standard YouTube videos are typically delivered in 2–3 business days; I confirm the exact timeline before starting. Revisions are unlimited.</p></div></li>
+        <li class="step"><span class="num">05</span><div><h3>Get the final export</h3><p>Once you're happy, you receive the approved final export, ready to publish.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="container">
+    <div class="sec-head">
+      <p class="eyebrow"><span class="secnum">05</span> Client feedback</p>
+      <h2 class="h2">Straight from <span class="blue">the DMs.</span></h2>
+      <p class="body muted">Quotes copied word-for-word from client messages. Tap a chat to see the original screenshot.</p>
+    </div>
+    <div class="fb-grid" id="fbGrid"></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="sec-head center">
+      <p class="eyebrow"><span class="secnum">06</span> Pricing</p>
+      <h2 class="h2">Simple, per video.</h2>
+      <p class="body muted">Final pricing depends on video length, complexity and edit style. Send your channel and requirements for a detailed quote.</p>
+    </div>
+    <div class="plans">
+      <div class="plan spot">
+        <h3>Short-form</h3>
+        <p class="muted">Shorts, TikToks, Reels, product ads</p>
+        <div class="price"><small>from</small> $9.99 <small>/ video</small></div>
+        <ul><li>Hook-first structure</li><li>Captions &amp; motion text</li><li>Sound design &amp; SFX</li><li>Unlimited revisions</li></ul>
+        <a href="#contact" class="btn btn-ghost w100" data-est-type="short">Estimate short-form</a>
+      </div>
+      <div class="plan plan-hot spot">
+                <h3>Long-form</h3>
+        <p class="muted">YouTube gaming &amp; creator videos</p>
+        <div class="price"><small>from</small> $29.99 <small>/ video</small></div>
+        <ul><li>Retention-focused pacing</li><li>Pattern breaks &amp; graphics</li><li>Colour &amp; audio mix</li><li>2–3 business day delivery</li><li>Unlimited revisions</li></ul>
+        <a href="#contact" class="btn btn-blue w100" data-est-type="long">Estimate long-form ↗</a>
+      </div>
+    </div>
+    <p class="plan-note">Monthly setups available — <a href="#contact">book a free 15-minute call</a> and we'll design one around your upload schedule.</p>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="compare">
+  <div class="container">
+    <div class="sec-head center"><h2 class="h2">Devereux Edits vs. the usual</h2></div>
+    <div class="cmp">
+      <div class="cmp-col good">
+        <h3>Working with Devereux Edits</h3>
+        <ul>
+          <li>Direct access to your editor</li>
+          <li>Retention-focused edits: hooks, pacing, pattern breaks</li>
+          <li>Consistent style across every upload</li>
+          <li>Unlimited revisions</li>
+          <li>Limited roster — deadlines hold</li>
+          <li>Typical reply ~10 minutes in working hours</li>
+        </ul>
+      </div>
+      <div class="cmp-col bad">
+        <h3>Agencies &amp; random freelancers</h3>
+        <ul>
+          <li>Hand-offs through account managers</li>
+          <li>Different editor, different result</li>
+          <li>Pay extra per revision</li>
+          <li>Overbooked timelines</li>
+          <li>Disappear when you need them</li>
+          <li>Generic edits, no channel context</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cta-strip">
+      <p>I keep a limited client roster to protect quality and deadlines.</p>
+      <a href="#contact" class="btn btn-blue">Request a quote ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container faq-grid">
+    <div class="faq-side">
+      <p class="eyebrow"><span class="secnum">07</span> FAQ</p>
+      <h2 class="h2">Frequently asked questions</h2>
+      <p class="body muted">Can't find your answer? Message me on Discord or WhatsApp — that's the fastest way to reach me.</p>
+      <a href="#contact" class="btn btn-ghost btn-sm">Ask me directly ↗</a>
+    </div>
+    <div class="acc" id="faqList"></div>
+  </div>
+</section>
+
+<!-- WORDMARK -->
+<section class="wordmark" aria-hidden="true">
+  <div class="wm"><span>DEVEREUX</span><span class="blue">EDITS</span></div>
+  <p class="wm-tag">Every edit is a new masterpiece.</p>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container contact-grid">
+    <div>
+      <p class="eyebrow"><span class="secnum">08</span> Contact</p>
+      <h2 class="h2">Let's make your next upload <span class="blue">the one.</span></h2>
+      <p class="body muted">For the fastest response, text me on WhatsApp or Discord. Include your channel and the video, and I'll reply with a quote and next steps.</p>
+      <div class="socials" id="socials"></div>
+      <p class="copied" aria-live="polite"></p>
+    </div>
+    <div class="est spot" id="estimator">
+      <div class="est-head">
+        <b>Project estimator</b>
+        <ol class="est-steps" aria-label="Progress"><li class="on">Project</li><li>Edit</li><li>Contact</li><li>Brief</li></ol>
+      </div>
+      <form id="estForm" novalidate>
+        <fieldset class="est-step" data-step="0">
+          <legend class="sr">Project</legend>
+          <div class="seg" role="radiogroup" aria-label="Format">
+            <label><input type="radio" name="type" value="short" checked><span>Short-form</span></label>
+            <label><input type="radio" name="type" value="long"><span>Long-form</span></label>
+          </div>
+          <label>Content niche<select name="niche" required><option value="">Choose a niche</option></select><em class="err"></em></label>
+          <div class="f2">
+            <label>Number of videos<input name="count" type="number" min="1" inputmode="numeric" value="1" required><em class="err"></em></label>
+            <label>Project type<select name="recurring"><option>One-time project</option><option>Recurring monthly work</option></select></label>
+          </div>
+        </fieldset>
+        <fieldset class="est-step" data-step="1" hidden>
+          <legend class="sr">Edit details</legend>
+          <div class="f2">
+            <label>Raw footage per video<input name="raw" placeholder="e.g. 45 min" required><em class="err"></em></label>
+            <label>Finished length<input name="final" placeholder="e.g. 60 sec or 12 min" required><em class="err"></em></label>
+          </div>
+          <div class="chips-field"><span>Requirements</span><div class="chips" id="reqChips"></div></div>
+          <label>Anything else? <small>(optional)</small><input name="other" placeholder="Other requirements"></label>
+          <label>Deadline<input name="deadline" type="date" required><em class="err"></em></label>
+        </fieldset>
+        <fieldset class="est-step" data-step="2" hidden>
+          <legend class="sr">Contact</legend>
+          <label>Your name<input name="name" autocomplete="name" required><em class="err"></em></label>
+          <label>Preferred contact method<select name="method" id="methodSel"></select></label>
+          <label>Channel link <small>(optional)</small><input name="channel" placeholder="youtube.com/@yourchannel"></label>
+          <label>Reference video <small>(optional)</small><input name="ref" placeholder="Link to a video you like"></label>
+        </fieldset>
+        <fieldset class="est-step" data-step="3" hidden>
+          <legend class="sr">Your brief</legend>
+          <label>Your brief — edit anything before sending<textarea name="brief" rows="10" id="briefOut"></textarea></label>
+          <div class="send-row" id="sendRow"></div>
+          <p class="est-status" role="status" aria-live="polite"></p>
+        </fieldset>
+        <div class="est-nav">
+          <button type="button" class="btn btn-ghost btn-sm" data-est="back" hidden>← Back</button>
+          <button type="button" class="btn btn-blue btn-sm" data-est="next">Next →</button>
+        </div>
+      </form>
+      <aside class="est-sum" aria-live="polite">
+        <span class="mono">STARTING REFERENCE</span>
+        <div class="est-price" id="estPrice">—</div>
+        <p class="est-note" id="estNote"></p>
+      </aside>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container foot-grid">
+    <div>
+      <a href="#top" class="logo"><span class="mono-mark">DE</span><span class="logo-txt">DEVEREUX<em>EDITS</em></span></a>
+      <p class="muted">A one-person studio turning raw footage into videos that hold attention and grow channels.</p>
+      <div class="hero-ctas"><a href="#contact" class="btn btn-blue btn-sm">Start a project</a><a href="#work" class="btn btn-ghost btn-sm">View my work</a></div>
+    </div>
+    <div><h4>Quick links</h4><a href="#work">Work</a><a href="#wins">Results</a><a href="#process">Process</a><a href="#reviews">Reviews</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></div>
+    <div class="foot-social"><h4>Get in touch</h4><div id="footSocials"></div><p class="muted small">Buffalo, New York · devereuxedits.com</p></div>
+  </div>
+  <div class="container foot-bottom"><span>© <span id="yr"></span> Devereux Edits. All rights reserved.</span><span class="foot-tag">Every edit is a new masterpiece.</span></div>
+</footer>
+
+<div class="m-cta" id="mCta"><a href="#contact" class="btn btn-blue">Start a project ↗</a><button class="btn btn-ghost" data-copy="lorenzo_devereux" aria-label="Copy Discord username"><img src="assets/icons/discord.svg" alt="" class="ico-inv" width="18" height="18"></button></div>
+
+<div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true"><div class="modal-inner"><button class="modal-x" aria-label="Close">×</button><div class="modal-body"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
