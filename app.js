@@ -654,3 +654,14 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
   const t0 = performance.now();
   setInterval(() => { const s = ((performance.now() - t0) % 9000) / 9000 * 60; tc.textContent = `00:00:${String(Math.floor(s)).padStart(2, '0')}:${String(Math.floor((s % 1) * 24)).padStart(2, '0')}`; }, 125);
 })();
+
+/* ---------- process video: keep the loop running on every device ---------- */
+(function processVideo() {
+  const v = $('.process-video'); if (!v) return;
+  v.muted = true; // iOS/Android only autoplay muted video
+  const play = () => { const p = v.play(); if (p) p.catch(() => {}); };
+  v.addEventListener('ended', () => { v.currentTime = 0; play(); }); // fallback if `loop` is ignored
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) play(); });
+  ['touchstart', 'click'].forEach(e => addEventListener(e, play, { once: true, passive: true })); // iOS Low Power Mode blocks autoplay until a gesture
+  play();
+})();

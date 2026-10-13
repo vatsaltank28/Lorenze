@@ -698,3 +698,6 @@ figcaption small{display:block;color:var(--gray)}
 @media (prefers-reduced-motion:reduce){.raw-ph{animation:none;left:38%}}
 .long-rail .vc{scroll-snap-align:start}
 .raw-card{justify-content:space-between}.raw-trk{height:20px}.raw-wave{height:18px}.raw-tl{gap:7px}
+
+/* process section video (loops seamlessly) */
+.process-video{display:block;width:100%;height:auto;border:1px solid var(--line-2);border-radius:var(--r);background:#0d0d10;box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
