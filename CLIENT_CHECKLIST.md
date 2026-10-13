@@ -1,30 +1,29 @@
-# Devereux Edits — what's still needed
+# Devereux Edits — handover & what's still needed
 
-All content is edited in `config.js`. Empty fields hide themselves on the site.
+## Change contact details (no coding needed)
+Edit `config.js` → `CONTACT` and redeploy. Every button, footer link and estimator option updates.
+- WhatsApp number → `CONTACT.whatsapp` (digits incl. country code, e.g. `16827938815`)
+- Email → `CONTACT.email` · Discord → `CONTACT.discordId` (opens discord.com/users/<id>)
+- X/Twitter → `CONTACT.twitter` (full URL) · Facebook → `CONTACT.facebook`
+- Empty fields are hidden automatically. Availability text → `AVAILABILITY`.
 
-## Contact (blocking)
-- [ ] WhatsApp number → `CONTACT.whatsapp` (digits with country code). Enables the WhatsApp button and estimator option.
-- [ ] Email address → `CONTACT.email`. Enables the Email button and estimator option.
+## Website messages ("Send from website" in the estimator)
+Briefs are emailed to devereuxedits.01@gmail.com by `api/contact.js` (Vercel function, via Resend).
+Setup: create a free account at resend.com **using devereuxedits.01@gmail.com**, create an API key, then in
+Vercel → Project → Settings → Environment Variables add `RESEND_API_KEY` (secret) and redeploy.
+Optional: `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` (needs a verified domain in Resend).
+Until the key is set, the site tells visitors to use WhatsApp instead; nothing is silently lost.
+Reply to a brief by contacting the person on the method/handle shown in the email.
 
-## Permissions (please confirm)
-- [ ] Each channel owner is OK with their analytics screenshots being public (`CASE_STUDIES[].permission`). Two of them show revenue.
-- [ ] SoulsLikeGamer, pabloNFFLS and FizzyRipz are OK being named (`TESTIMONIALS[].showName`).
+## Hosting
+Live at https://devereux.vercel.app/ (Vercel). To give Lorenzo access: Vercel → Project → Settings →
+Members (invite), or transfer the project to his own Vercel account. Updates deploy by pushing to the
+connected Git repo (or `vercel --prod`). Never share the `RESEND_API_KEY` value.
 
-## Content that would make case studies complete
-For each case study: niche, channel name (if approved), the original challenge, Lorenzo's role, the editing strategy and the finished video.
-
-## Media
-- [ ] Long-form samples → `LONG_FORM` (mp4 in `assets/video` or a YouTube link). The section stays hidden until one exists.
-- [ ] Genuine raw footage + its final edit for a before/after comparison → `BEFORE_AFTER` (component not built yet; hidden).
-- [ ] Optional: a photo of Lorenzo for the "Who you'll work with" card.
-
-## Pricing
-- [ ] Any rules beyond the starting prices ($9.99 short / $29.99 long): rush fees, bulk or monthly rates → `ESTIMATOR.confirmedRules`. None are shown until confirmed.
-
-## Analytics
-- [ ] Choose a provider (Plausible, GA4 or GTM) if wanted. Events are already wired through `track()` in `app.js` and contain no personal data.
-
-## How to add things
-- **Short-form video:** put `name.mp4` and a `name.jpg` poster in `assets/video`, then add `V('cat', n, width, height, seconds)` under its category in `SHORT_FORM`.
-- **Long-form video:** replace a `null` in `LONG_FORM` with the same `V(...)` entry or a YouTube object.
-- **Case study / testimonial:** copy an existing object in `CASE_STUDIES` / `TESTIMONIALS` and fill only verified fields.
+## Still needed from Lorenzo
+- [ ] X/Twitter profile URL
+- [x] Replacement analytics screenshot → win-5.jpg (geography card)
+- [ ] Extra channel-win and client-feedback screenshots he mentioned
+- [x] Long-form videos: 9 web copies in assets/video/long-1..9 (~340 MB). Consider unlisted YouTube links later to save Vercel bandwidth.
+- [ ] Confirm channel owners are OK with public analytics / being named
+- [ ] fb-5.jpg shows a Google Drive folder link — confirm OK to show publicly (or blur it)

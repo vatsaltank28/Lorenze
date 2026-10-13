@@ -8,3 +8,7 @@ Colour.jpeg
 Message.jpeg
 _backup_v2/
 assets/manifest.json
+
+# original long-form downloads (web copies live in assets/video)
+Long Forms-*/
+Changes/

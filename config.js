@@ -6,23 +6,27 @@
    ========================================================================== */
 
 /* ---------- Contact ----------
-   whatsapp: digits only incl. country code, e.g. '17165551234'  (not supplied yet)
-   email:    e.g. 'hello@devereuxedits.com'                     (not supplied yet) */
+   THE ONLY PLACE contact details live. Change a value here and every button,
+   footer link and estimator option on the site updates automatically.
+   Leave a field '' and its button is hidden (never shown as a dead link).
+   whatsapp:  digits only incl. country code — builds https://wa.me/<digits>
+   discordId: numeric Discord user ID — opens https://discord.com/users/<id>
+   twitter:   full profile URL, e.g. 'https://x.com/yourhandle'  (NOT supplied yet)
+   facebook:  full profile/page URL */
 const CONTACT = {
-  discord: 'lorenzo_devereux',
-  whatsapp: '',
-  email: '',
+  discord: 'lorenzo_devereux',          // username shown on the site
+  discordId: '1323213896240205845',
+  whatsapp: '16827938815',
+  email: 'devereuxedits.01@gmail.com',
+  twitter: '',
   tiktok: 'https://www.tiktok.com/@devereux_digital_hub',
   facebook: 'https://www.facebook.com/share/1M8XFMZTkR/?mibextid=wwXIfr',
   domain: 'devereuxedits.com',
 };
 
-/* ---------- Working hours (PDF) — rendered timezone-aware, DST handled by Intl ---------- */
-const HOURS = {
-  timeZone: 'America/New_York',
-  start: 7,                  // 7 AM
-  end: 22,                   // 10 PM
-  workDays: [1, 2, 3, 4, 5], // Mon–Fri (no editing on weekends; bookings still accepted)
+/* ---------- Availability (client-provided claim — edit freely) ---------- */
+const AVAILABILITY = {
+  label: 'Online 24/7',
   typicalReply: '~10 minutes', // an estimate, not a guarantee
 };
 
@@ -54,10 +58,13 @@ const SHORT_FORM = {
   'Ranking Videos':      [V('ranking', 1, 576, 1024, 33), V('ranking', 2, 576, 1024, 60), V('ranking', 3, 576, 1024, 42)],
   'Commercials & Ads':   [V('ads', 1, 1280, 720, 19), V('ads', 2, 1906, 1080, 24), V('ads', 3, 1280, 720, 31)],
 };
-/* Long-form: replace a null with V('long', 1, 1920, 1080, 600) (file in assets/video)
-   or { id:'yt-1', src:'https://youtu.be/XXXXXXXXXXX', poster:'assets/video/long-1.jpg', w:1920, h:1080, dur:600 }.
-   The long-form section stays hidden while every entry is null. */
-const LONG_FORM = [null, null, null];
+/* Long-form: web-optimised H.264 copies in assets/video (originals untouched in "Long Forms-…").
+   Grouped by heading. Add V('long', n, width, height, seconds) or a YouTube object
+   { id:'yt-1', src:'https://youtu.be/XXXXXXXXXXX', poster:'assets/video/long-1.jpg', w:1920, h:1080, dur:600 }. */
+const LONG_FORM = {
+  'Commentary & Storytelling': [V('long', 1, 262, 480, 147), V('long', 2, 1280, 960, 363), V('long', 3, 852, 480, 1589), V('long', 4, 1280, 720, 1850)],
+  'Gaming': [V('long', 5, 1024, 576, 277), V('long', 6, 576, 1024, 201), V('long', 7, 576, 1024, 424), V('long', 8, 576, 1024, 297), V('long', 9, 576, 1024, 302)],
+};
 
 /* ---------- Featured work ----------
    Descriptions only state what is visible in each video — no invented clients or results. */
@@ -99,17 +106,10 @@ const CASE_STUDIES = [
     challenge: null, contribution: null, strategy: null, video: null, testimonial: null, permission: true,
   },
   {
-    id: 'subs-11k', title: 'Subscriber surge', niche: null, client: null,
-    img: 'assets/img/win-4.jpg', wide: true, platform: 'YouTube',
-    metric: { value: '+11.8K', unit: 'subscribers', definition: 'YouTube Studio net subscribers', period: '28 days · Sep 1 – Sep 28, 2026' },
-    extra: [['1.68M', 'views (shown as 16.8L)'], ['+620%', 'watch time vs previous 28 days'], ['$681.91', 'estimated revenue']],
-    challenge: null, contribution: null, strategy: null, video: null, testimonial: null, permission: true,
-  },
-  {
-    id: 'tiktok-321k', title: 'Single TikTok edit', niche: null, client: null,
-    img: 'assets/img/win-1.jpg', wide: false, platform: 'TikTok',
-    metric: { value: '321.6K', unit: 'video views', definition: 'TikTok Studio “Video views” for one post', period: 'At time of screenshot (chart spans the first ~38 hours)' },
-    extra: [['27.64%', 'watched the full video'], ['30.2s', 'average watch time'], ['+362', 'new followers']],
+    id: 'geo-us', title: 'Audience geography', niche: null, client: null,
+    img: 'assets/img/win-5.jpg', wide: true, platform: 'YouTube',
+    metric: { value: '60.5%', unit: 'of views from the US', definition: 'YouTube Studio “Geography” — views by country', period: 'Last 28 days (dates not shown in screenshot)' },
+    extra: [['5.0%', 'United Kingdom'], ['4.4%', 'Canada']],
     challenge: null, contribution: null, strategy: null, video: null, testimonial: null, permission: true,
   },
 ];
@@ -119,14 +119,26 @@ const CASE_STUDIES = [
 const TESTIMONIALS = [
   { img: 'assets/img/fb-2.jpg', quote: 'Your edits are breathtaking', name: 'SoulsLikeGamer', showName: true, context: 'Discord DM' },
   { img: 'assets/img/fb-1.jpg', quote: 'Looks good bro. Already better then the previous video', name: 'pabloNFFLS', showName: true, context: 'Discord DM · feedback on a work-in-progress edit' },
+  { img: 'assets/img/fb-5.jpg', quote: 'Video looks good bro', name: 'pabloNFFLS', showName: true, context: 'Discord DM · after delivery' },
   { img: 'assets/img/fb-3.jpg', quote: 'Thank you … Later today ill add all socials to my yt', name: 'FizzyRipz', showName: true, context: 'Discord DM' },
 ];
 
-const NICHES = ['Roblox', 'Grow a Garden', 'Minecraft', 'Steal a Brainrot', 'Podcasts', 'Ranking Videos', 'Gaming YouTube', 'Product Ads', 'TikTok', 'YouTube Shorts'];
+/* ---------- Creators worked with (from "Devereux Edits website Workflow 2") ----------
+   name = channel handle exactly as supplied. Add/remove entries freely. */
+const CREATORS = [
+  { name: 'ROBLOXGAMING1M-y5i', url: 'https://youtube.com/@robloxgaming1m-y5i' },
+  { name: 'RobloxForm', url: 'https://youtube.com/@robloxform' },
+  { name: 'Lynix', url: 'https://youtube.com/@lynix' },
+  { name: 'MinecraftMomentsFR', url: 'https://youtube.com/@minecraftmomentsfr' },
+  { name: 'rank-it-shorts', url: 'https://youtube.com/@rank-it-shorts' },
+  { name: 'Funnyrankingshort_kk', url: 'https://youtube.com/@funnyrankingshort_kk' },
+];
+
+const NICHES = ['Roblox', 'Commentary', 'UGC', 'Brands & Businesses', 'Grow a Garden', 'Minecraft', 'Steal a Brainrot', 'Podcasts', 'Ranking Videos', 'Gaming YouTube', 'Product Ads', 'TikTok', 'YouTube Shorts'];
 
 /* ---------- FAQ (PDF) ---------- */
 const FAQ = [
-  ["What is Devereux Edits?", "Devereux Edits is a premium one-person video editing studio focused on high-retention YouTube content. I specialize in gaming and creator videos, with every edit built for watch time, audience retention, and long-term channel growth."],
+  ["What is Devereux Edits?", "Devereux Edits is a video-editing agency for YouTubers, content creators, gaming channels, Roblox, Minecraft, ranking, commentary, UGC, brands, businesses and service providers. Every edit is built for watch time and audience retention."],
   ["Do you edit Roblox and Minecraft videos?", "Yes. Gaming is my core focus. I edit Roblox content (including trending titles like Grow a Garden and Steal a Brainrot), Minecraft videos, and gaming YouTube channels of all sizes — both long form and short form."],
   ["How much do you charge?", "Short-form videos start from $9.99 and long-form videos start from $29.99. Final pricing depends on video length, complexity, and edit style. Send me your channel and requirements for a detailed quote."],
   ["Do you work on a monthly contract basis?", "Yes. Message me to book a free 15-minute call so we can design the right monthly setup for your channel."],
@@ -135,9 +147,9 @@ const FAQ = [
   ["How do payments work?", "Payment is upfront. You can pay via card, PayPal, bank transfer, crypto, or Remitly. For first-time orders, we can also run the project through a protected platform if preferred."],
   ["What's your refund policy?", "Once work has started, refunds are not available unless I cancel the project. Revisions are unlimited, so we continue until you're fully satisfied with the final video."],
   ["How many revisions do I get?", "Unlimited. I revise until the video matches your vision and performs for your audience."],
-  ["What is your usual turnaround time?", "Standard YouTube videos are typically delivered in 2 to 3 business days. More complex projects may take longer — I'll always confirm the exact timeline before starting. I keep a limited client roster to protect quality and deadlines."],
-  ["How fast do you reply?", "I work 7 AM to 10 PM New York time and usually reply within 10 minutes, depending on the platform. For the fastest response, message me on WhatsApp or Discord. You can book services on weekends, but I don't edit on weekends."],
-  ["How can I order?", "Send me a brief of what you need via Discord, WhatsApp, or email. Include details about your channel and the video, and I'll reply with a quote and next steps."],
+  ["What is your usual turnaround time?", "Standard YouTube videos are typically delivered in 2 to 3 business days. More complex projects may take longer — I'll always confirm the exact timeline before starting."],
+  ["How fast do you reply?", "We're online 24/7 and usually reply within about 10 minutes, depending on the platform. For the fastest response, message us on WhatsApp or Discord."],
+  ["How can I order?", "Use the project estimator on this page, or send a brief via WhatsApp, Discord or email. Include details about your channel and the video, and I'll reply with a quote and next steps."],
 ];
 
 /* ---------- Niche pages (generated into /work by build_niches.py) ----------

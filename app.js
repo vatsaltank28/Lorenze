@@ -1,11 +1,15 @@
 /* Content lives in config.js (loaded first). */
+const DISCORD_URL = CONTACT.discordId ? `https://discord.com/users/${CONTACT.discordId}` : '';
+const WA_URL = CONTACT.whatsapp ? `https://wa.me/${CONTACT.whatsapp.replace(/\D/g, '')}` : '';
+/* Entries with no destination are dropped — no dead or "coming soon" icons. */
 const SOCIALS = [
-  { name: 'Discord', icon: 'discord', brand: '#5865F2', copy: CONTACT.discord, label: CONTACT.discord },
-  { name: 'WhatsApp', icon: 'whatsapp', brand: '#25D366', href: CONTACT.whatsapp ? `https://wa.me/${CONTACT.whatsapp}` : '' },
-  { name: 'TikTok', icon: 'tiktok', brand: '#111', href: CONTACT.tiktok },
+  { name: 'WhatsApp', icon: 'whatsapp', brand: '#25D366', href: WA_URL },
+  { name: 'Discord', icon: 'discord', brand: '#5865F2', href: DISCORD_URL, label: CONTACT.discord },
+  { name: 'Email', icon: 'gmail', brand: '#EA4335', href: CONTACT.email ? `mailto:${CONTACT.email}` : '', label: CONTACT.email },
+  { name: 'X (Twitter)', icon: 'x', brand: '#000', href: CONTACT.twitter },
   { name: 'Facebook', icon: 'facebook', brand: '#1877F2', href: CONTACT.facebook },
-  { name: 'Email', icon: 'gmail', brand: '#EA4335', href: CONTACT.email ? `mailto:${CONTACT.email}` : '' },
-];
+  { name: 'TikTok', icon: 'tiktok', brand: '#111', href: CONTACT.tiktok },
+].filter(s => s.href);
 const ALL_VIDEOS = Object.entries(SHORT_FORM).flatMap(([cat, list]) => list.map(v => ({ ...v, cat })));
 const money = n => '$' + n.toFixed(2);
 
@@ -71,29 +75,15 @@ async function copyText(t, msg) {
 }
 document.addEventListener('click', e => {
   const c = e.target.closest('[data-copy]'); if (!c) return;
-  e.preventDefault(); copyText(c.dataset.copy, `Discord username “${c.dataset.copy}” copied — add me on Discord.`);
+  e.preventDefault(); copyText(c.dataset.copy);
 });
 
-/* ---------- live New York clock + availability ---------- */
-(function nyClock() {
-  const f = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', weekday: 'short', hour12: true });
-  const f24 = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false });
-  const tick = () => {
-    const now = new Date();
-    const p = Object.fromEntries(f.formatToParts(now).map(x => [x.type, x.value]));
-    const h = +f24.format(now) % 24, weekend = p.weekday === 'Sat' || p.weekday === 'Sun';
-    const day = new Date(now.toLocaleString('en-US', { timeZone: HOURS.timeZone })).getDay();
-    const working = HOURS.workDays.includes(day) && h >= HOURS.start && h < HOURS.end;
-    $$('[data-ny-time]').forEach(el => el.textContent = `${p.hour}:${p.minute} ${p.dayPeriod}`);
-    $$('[data-live-status]').forEach(el => el.textContent = working ? 'Within working hours' : weekend ? 'Weekend — bookings open' : 'Outside working hours');
-    $$('[data-live-dot]').forEach(el => el.classList.toggle('off', !working));
-    const pill = $('[data-live-pill]'); if (pill) pill.textContent = working ? `Within working hours · typical reply ${HOURS.typicalReply}` : 'Taking new projects';
-    const tz = new Intl.DateTimeFormat('en-US', { timeZone: HOURS.timeZone, timeZoneName: 'short' }).formatToParts(now).find(x => x.type === 'timeZoneName').value;
-    const h12 = x => `${x % 12 || 12} ${x < 12 ? 'AM' : 'PM'}`;
-    $$('[data-hours]').forEach(el => el.textContent = `${h12(HOURS.start)} – ${h12(HOURS.end)} New York time (${tz})`);
-  };
-  tick(); setInterval(tick, 30000);
-})();
+/* ---------- availability: always online (values in config.js AVAILABILITY) ---------- */
+$$('[data-live-pill]').forEach(el => el.textContent = `${AVAILABILITY.label} · typical reply ${AVAILABILITY.typicalReply}`);
+$$('[data-live-status]').forEach(el => el.textContent = AVAILABILITY.label);
+$$('[data-reply]').forEach(el => el.textContent = AVAILABILITY.typicalReply.replace(/^~/, ''));
+$$('[data-discord]').forEach(a => DISCORD_URL ? a.href = DISCORD_URL : a.remove());
+$$('[data-wa]').forEach(a => WA_URL ? a.href = WA_URL : a.remove());
 
 /* ---------- niches marquee (ScrollVelocity, React Bits) ---------- */
 $('#nicheTrack').innerHTML = NICHES.map(n => `<span class="niche">${n}</span>`).join('').repeat(2);
@@ -198,8 +188,13 @@ function cardHTML(v, i) {
   });
   roots.forEach(r => new IntersectionObserver(([e]) => { if (!e.isIntersecting && activeCard && r.contains(activeCard)) stopCard(activeCard); }).observe(r));
 
-  const longs = LONG_FORM.filter(Boolean);
-  if (longs.length) { $('#longWrap').hidden = false; $('#longRail').innerHTML = longs.map(cardHTML).join(''); }
+  /* long-form: poster only until clicked — the full file streams in the lightbox, never preloaded */
+  const groups = Object.entries(LONG_FORM).filter(([, l]) => l.length);
+  if (groups.length) {
+    $('#longWrap').hidden = false;
+    $('#longRail').outerHTML = groups.map(([g, l], gi) => `<h3 class="long-cat">${g}<span class="n">${l.length}</span></h3>
+      <div class="rail long-rail" id="longRail${gi}">${l.map(cardHTML).join('')}</div>`).join('');
+  }
 })();
 $$('.arrow').forEach(b => b.addEventListener('click', () => {
   const r = $('#' + b.dataset.target);
@@ -227,11 +222,19 @@ $('#fbGrid').innerHTML = TESTIMONIALS.map(f => `
     <figcaption><span class="avatar">${f.showName ? f.name[0] : 'C'}</span><div><b>${f.showName ? f.name : 'Client'}</b><small>${f.context}</small></div></figcaption>
   </figure>`).join('');
 
+/* ---------- creators worked with ---------- */
+const crGrid = $('#crGrid');
+if (crGrid && CREATORS.length) crGrid.innerHTML = CREATORS.map(c => `
+  <a class="cr spot" href="${c.url}" target="_blank" rel="noopener" aria-label="${c.name} on YouTube (opens in a new tab)">
+    <span class="cr-av" aria-hidden="true">${c.name.replace(/[^a-z0-9]/gi, '').slice(0, 2).toUpperCase()}</span>
+    <span class="cr-txt"><b>@${c.name}</b><small>YouTube channel ↗</small></span>
+  </a>`).join('');
+else $('#creators') && $('#creators').remove();
+
 /* ---------- socials (real brand icons) ---------- */
-const linkAttrs = s => s.copy ? `href="#" data-copy="${s.copy}"` : s.href ? `href="${s.href}" target="_blank" rel="noopener"` : `href="#" aria-disabled="true"`;
-$('#socials').innerHTML = SOCIALS.map(s => `<a class="soc" ${linkAttrs(s)} style="--brand:${s.brand}" aria-label="${s.name}"><img src="assets/icons/${s.icon}.svg" alt="" width="22" height="22">${s.label || s.name}${!s.href && !s.copy ? '<span class="soon">soon</span>' : ''}</a>`).join('');
-$('#footSocials').innerHTML = SOCIALS.map(s => `<a ${linkAttrs(s)}><img src="assets/icons/${s.icon}.svg" alt="">${s.copy ? 'Discord: ' + s.copy : s.name}</a>`).join('');
-$$('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+const linkAttrs = s => `href="${s.href}"${s.href.startsWith('mailto:') ? '' : ' target="_blank" rel="noopener"'}`;
+$('#socials').innerHTML = SOCIALS.map(s => `<a class="soc" ${linkAttrs(s)} style="--brand:${s.brand}" aria-label="${s.name}"><img src="assets/icons/${s.icon}.svg" alt="" width="22" height="22">${s.label || s.name}</a>`).join('');
+$('#footSocials').innerHTML = SOCIALS.map(s => `<a ${linkAttrs(s)}><img src="assets/icons/${s.icon}.svg" alt="">${s.label ? s.name + ': ' + s.label : s.name}</a>`).join('');
 
 /* ---------- project estimator ---------- */
 (function estimator() {
@@ -240,23 +243,23 @@ $$('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.pr
   const status = $('.est-status', form), out = $('#briefOut'), KEY = 'de-estimator';
   form.niche.innerHTML += ESTIMATOR.niches.map(n => `<option>${n}</option>`).join('');
   $('#reqChips').innerHTML = ESTIMATOR.requirements.map(r => `<label><input type="checkbox" name="req" value="${r}">${r}</label>`).join('');
-  const methods = [['Discord', true], ['WhatsApp', !!CONTACT.whatsapp], ['Email', !!CONTACT.email]].filter(m => m[1]).map(m => m[0]);
+  const methods = [['WhatsApp', !!WA_URL], ['Discord', !!DISCORD_URL], ['Email', !!CONTACT.email]].filter(m => m[1]).map(m => m[0]);
   form.method.innerHTML = methods.map(m => `<option>${m}</option>`).join('');
-  form.deadline.min = new Date().toISOString().slice(0, 10);
+  { const t = new Date(); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); form.deadline.min = t.toISOString().slice(0, 10); } // local date, not UTC
   let step = 0, started = false, edited = false;
 
   const data = () => ({
     type: form.type.value, niche: form.niche.value, count: Math.max(1, Math.min(ESTIMATOR.maxVideos, parseInt(form.count.value) || 1)),
     recurring: form.recurring.value, raw: form.raw.value.trim(), final: form.final.value.trim(),
     req: $$('input[name=req]:checked', form).map(c => c.value), other: form.other.value.trim(), deadline: form.deadline.value,
-    name: form.name.value.trim(), method: form.method.value, channel: form.channel.value.trim(), ref: form.ref.value.trim(),
+    name: form.name.value.trim(), contact: form.contact.value.trim(), method: form.method.value, channel: form.channel.value.trim(), ref: form.ref.value.trim(),
   });
   const save = () => { try { const d = data(); d.brief = edited ? out.value : ''; d.step = step; sessionStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} };
   const load = () => {
     try {
       const d = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (!d) return null;
       form.type.value = d.type;
-      ['niche', 'count', 'recurring', 'raw', 'final', 'other', 'deadline', 'name', 'method', 'channel', 'ref'].forEach(k => { if (d[k] != null && form[k]) form[k].value = d[k]; });
+      ['niche', 'count', 'recurring', 'raw', 'final', 'other', 'deadline', 'name', 'contact', 'method', 'channel', 'ref'].forEach(k => { if (d[k] != null && form[k]) form[k].value = d[k]; });
       $$('input[name=req]', form).forEach(c => c.checked = (d.req || []).includes(c.value));
       if (d.brief) { out.value = d.brief; edited = true; }
       return d;
@@ -269,7 +272,7 @@ $$('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.pr
   };
   const brief = () => {
     const d = data();
-    const lines = [`Hi Lorenzo! I'm ${d.name || '—'}.`, '',
+    const lines = [`Hi Lorenzo! I'm ${d.name || '—'}.`, `Reach me on ${d.method}: ${d.contact || '—'}`, '',
       `Format: ${d.type === 'short' ? 'Short-form' : 'Long-form'} · ${d.niche || '—'}`,
       `Videos: ${d.count} (${d.recurring})`,
       `Raw footage per video: ${d.raw || '—'}`, `Finished length: ${d.final || '—'}`,
@@ -294,13 +297,31 @@ $$('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.pr
   };
   const renderSend = () => {
     const d = data(), text = encodeURIComponent(out.value);
-    const btns = [`<button type="button" class="btn btn-ghost btn-sm" data-act="copy">Copy brief</button>`];
-    if (d.method === 'Discord') btns.push(`<button type="button" class="btn btn-blue btn-sm" data-act="discord">Copy &amp; open Discord ↗</button>`);
-    if (d.method === 'WhatsApp' && CONTACT.whatsapp) btns.push(`<a class="btn btn-blue btn-sm" data-act="whatsapp" href="https://wa.me/${CONTACT.whatsapp}?text=${text}" target="_blank" rel="noopener">Open in WhatsApp ↗</a>`);
-    if (d.method === 'Email' && CONTACT.email) btns.push(`<a class="btn btn-blue btn-sm" data-act="email" href="mailto:${CONTACT.email}?subject=${encodeURIComponent('Project brief — ' + (d.niche || 'video editing'))}&body=${text}">Open in email ↗</a>`);
+    const btns = [`<button type="button" class="btn btn-blue btn-sm" data-act="site">Send from website ↗</button>`];
+    if (d.method === 'WhatsApp' && WA_URL) btns.push(`<a class="btn btn-ghost btn-sm" data-act="whatsapp" href="${WA_URL}?text=${text}" target="_blank" rel="noopener">Open in WhatsApp ↗</a>`);
+    if (d.method === 'Discord' && DISCORD_URL) btns.push(`<button type="button" class="btn btn-ghost btn-sm" data-act="discord">Copy &amp; open Discord ↗</button>`);
+    if (d.method === 'Email' && CONTACT.email) btns.push(`<a class="btn btn-ghost btn-sm" data-act="email" href="mailto:${CONTACT.email}?subject=${encodeURIComponent('Project brief — ' + (d.niche || 'video editing'))}&body=${text}">Open in email ↗</a>`);
+    btns.push(`<button type="button" class="btn btn-ghost btn-sm" data-act="copy">Copy brief</button>`);
     $('#sendRow').innerHTML = btns.join('');
-    status.textContent = 'Nothing has been sent yet — send the brief from your own account.';
+    status.textContent = 'Nothing has been sent yet.';
   };
+  /* Server-side delivery (api/contact.js emails Lorenzo). Success is only shown when the server confirms. */
+  let sending = false;
+  async function sendSite(btn) {
+    if (sending) return; sending = true; btn.disabled = true; btn.textContent = 'Sending…';
+    const d = data();
+    try {
+      const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: d.name, contact: d.contact, method: d.method, channel: d.channel, brief: out.value, website: form.website ? form.website.value : '' }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.ok) throw new Error(j.error || 'server error');
+      status.textContent = `✓ Sent! Your brief reached Devereux Edits — expect a reply on ${d.method} soon.`;
+      btn.textContent = 'Sent ✓'; track('contact_submitted', { channel: 'site' });
+    } catch (e) {
+      status.textContent = `Couldn't send from the website (${e.message}). Please use ${WA_URL ? 'WhatsApp' : 'another option'} — your brief is still here.`;
+      btn.disabled = false; btn.textContent = 'Try again';
+    } finally { sending = false; }
+  }
   const show = i => {
     step = i;
     steps.forEach((f, k) => f.hidden = k !== i);
@@ -323,13 +344,14 @@ $$('a[aria-disabled="true"]').forEach(a => a.addEventListener('click', e => e.pr
   $('#sendRow').addEventListener('click', e => {
     const a = e.target.closest('[data-act]'); if (!a) return;
     const act = a.dataset.act;
+    if (act === 'site') return sendSite(a);
     if (act === 'copy' || act === 'discord') {
       copyText(out.value, act === 'discord' ? `Brief copied — paste it into a DM to ${CONTACT.discord}.` : 'Brief copied to your clipboard.');
       status.textContent = act === 'discord'
-        ? `Brief copied. Discord opens in a new tab — add ${CONTACT.discord} and paste the brief into a DM. It isn't sent until you press send there.`
+        ? `Brief copied. Lorenzo's Discord profile opens in a new tab — paste the brief into a DM and press send there.`
         : 'Brief copied to your clipboard.';
       track('brief_copied', { via: act });
-      if (act === 'discord') { window.open('https://discord.com/app', '_blank', 'noopener'); track('contact_click', { channel: 'discord' }); }
+      if (act === 'discord') { window.open(DISCORD_URL, '_blank', 'noopener'); track('contact_click', { channel: 'discord' }); }
     } else {
       status.textContent = `Opening ${act === 'email' ? 'your email app' : 'WhatsApp'} with the brief filled in — press send there.`;
       track('contact_click', { channel: act });
@@ -384,7 +406,7 @@ function openModal({ src, img, w, h }) {
     mInner.style.width = mBody.style.width;
     const yt = src.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);
     mBody.innerHTML = yt ? `<iframe src="https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>`
-      : `<video src="${src}" controls autoplay playsinline preload="auto"></video>`;
+      : `<video src="${src}" controls autoplay playsinline preload="metadata"></video>`;
   }
   modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
   lenis && lenis.stop(); document.documentElement.style.overflow = 'hidden';
@@ -621,4 +643,14 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
   });
 
   addEventListener('load', () => ScrollTrigger.refresh());
+})();
+
+/* ---------- RAW_FOOTAGE card: playhead travel width + timecode (decorative) ---------- */
+(function rawCard() {
+  const tl = $('.raw-tl'), tc = $('.raw-tc'); if (!tl) return;
+  const set = () => tl.style.setProperty('--rw', tl.clientWidth + 'px');
+  set(); new ResizeObserver(set).observe(tl);
+  if (reduce || !tc) return;
+  const t0 = performance.now();
+  setInterval(() => { const s = ((performance.now() - t0) % 9000) / 9000 * 60; tc.textContent = `00:00:${String(Math.floor(s)).padStart(2, '0')}:${String(Math.floor((s % 1) * 24)).padStart(2, '0')}`; }, 125);
 })();
