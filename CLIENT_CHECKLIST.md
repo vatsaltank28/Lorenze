@@ -26,4 +26,5 @@ connected Git repo (or `vercel --prod`). Never share the `RESEND_API_KEY` value.
 - [ ] Extra channel-win and client-feedback screenshots he mentioned
 - [x] Long-form videos: 9 web copies in assets/video/long-1..9 (~340 MB). Consider unlisted YouTube links later to save Vercel bandwidth.
 - [ ] Confirm channel owners are OK with public analytics / being named
-- [ ] fb-5.jpg shows a Google Drive folder link — confirm OK to show publicly (or blur it)
+- [ ] fb-6.jpg shows a Google Drive folder link — confirm OK to show publicly (or blur it)
+- [ ] Point devereuxedits.com at Vercel, then re-test link previews (og.jpg)

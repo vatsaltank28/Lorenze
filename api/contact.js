@@ -27,7 +27,8 @@ module.exports = async (req, res) => {
 
   const d = {};
   for (const [k, max] of Object.entries(LIMITS)) {
-    const v = typeof body[k] === 'string' ? body[k].trim() : '';
+    let v = typeof body[k] === 'string' ? body[k].trim() : '';
+    if (k !== 'brief') v = v.replace(/[\r\n]+/g, ' '); // no line breaks in subject/header fields
     if (v.length > max) return res.status(400).json({ ok: false, error: `${k} is too long` });
     d[k] = v;
   }

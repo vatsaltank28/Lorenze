@@ -29,6 +29,12 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+/* Slow device / data saver: show posters only — no autoplaying or hover-preview video. */
+const LOWPERF = window.LOWPERF = (() => {
+  const c = navigator.connection || {};
+  return !!(c.saveData || /(^|-)2g|3g/.test(c.effectiveType || '') || (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2));
+})();
+if (LOWPERF) document.documentElement.classList.add('lowperf');
 const fmt = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 
 /* ---------- smooth scroll (Lenis smooths wheel only; touch stays native) ---------- */
@@ -64,7 +70,7 @@ const navLinks = $$('.nav-links a');
 const sectObs = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) navLinks.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id));
 }), { rootMargin: '-45% 0px -50% 0px' });
-['work', 'wins', 'process', 'reviews', 'pricing', 'faq'].forEach(id => $('#' + id) && sectObs.observe($('#' + id)));
+['work', 'wins', 'creators', 'process', 'reviews', 'pricing', 'faq'].forEach(id => $('#' + id) && sectObs.observe($('#' + id)));
 
 /* ---------- copy-to-clipboard ---------- */
 const toast = $('.copied');
@@ -136,7 +142,7 @@ function startCard(card) {
 }
 function cardHTML(v, i) {
   const r = v.w / v.h, ratio = r > 2 ? '21:9' : r > 1.2 ? '16:9' : r > .95 ? '1:1' : r > .65 ? '3:4' : '9:16';
-  return `<div class="vc" data-vid="${v.id}" data-src="${v.src}" data-open="${v.src}" data-w="${v.w}" data-h="${v.h}" style="--r:${(v.w / v.h).toFixed(4)};aspect-ratio:${v.w}/${v.h};animation-delay:${i * 70}ms" role="button" tabindex="0" aria-label="Play video ${i + 1} with sound">
+  return `<div class="vc" data-vid="${v.id}" data-src="${v.src}" data-open="${v.yt || v.src}" data-w="${v.w}" data-h="${v.h}" style="--r:${(v.w / v.h).toFixed(4)};aspect-ratio:${v.w}/${v.h};animation-delay:${i * 70}ms" role="button" tabindex="0" aria-label="Play video ${i + 1} with sound">
     <img src="${v.poster}" alt="" loading="lazy" decoding="async">
     <span class="play" aria-hidden="true">▶</span>
     <div class="vc-meta"><b>${String(i + 1).padStart(2, '0')}</b><span>${fmt(v.dur)} · ${ratio}</span></div>
@@ -182,7 +188,7 @@ function cardHTML(v, i) {
   }).join('');
 
   const roots = [rail, $('#featured')];
-  if (fine) roots.forEach(root => {
+  if (fine && !LOWPERF) roots.forEach(root => {
     root.addEventListener('pointerover', e => { const c = e.target.closest('.vc'); if (c && !c.contains(e.relatedTarget)) startCard(c); });
     root.addEventListener('pointerout', e => { const c = e.target.closest('.vc'); if (c && !c.contains(e.relatedTarget)) stopCard(c); });
   });
@@ -215,20 +221,41 @@ $('#winsTrack').innerHTML = CASE_STUDIES.filter(c => c.permission).map(c => `
       ${c.testimonial ? `<blockquote>“${c.testimonial}”</blockquote>` : ''}
     </div>
   </article>`).join('');
-$('#fbGrid').innerHTML = TESTIMONIALS.map(f => `
-  <figure class="fb spot">
-    <div class="fb-phone" data-img="${f.img}" role="button" tabindex="0" aria-label="View original message screenshot"><img src="${f.img}" alt="Discord message from a client" loading="lazy" decoding="async"></div>
-    <blockquote>“${f.quote}”</blockquote>
-    <figcaption><span class="avatar">${f.showName ? f.name[0] : 'C'}</span><div><b>${f.showName ? f.name : 'Client'}</b><small>${f.context}</small></div></figcaption>
+const STARS = '<span class="stars" aria-label="5 out of 5">★★★★★</span>';
+$('#fbGrid').innerHTML = TESTIMONIALS.map((f, i) => `
+  <figure class="tm spot${i === 0 ? ' tm-lead' : ''}">
+    <span class="tm-q" aria-hidden="true">“</span>
+    ${STARS}
+    <blockquote>${f.quote}</blockquote>
+    <figcaption>
+      <span class="avatar" aria-hidden="true">${(f.showName ? f.name : 'C')[0].toUpperCase()}</span>
+      <div><b>${f.showName ? f.name : 'Client'}</b><small>${f.context}</small></div>
+      <button type="button" class="tm-proof" data-img="${f.img}" aria-label="View the original Discord message from ${f.showName ? f.name : 'this client'}">View chat ↗</button>
+    </figcaption>
   </figure>`).join('');
 
 /* ---------- creators worked with ---------- */
 const crGrid = $('#crGrid');
-if (crGrid && CREATORS.length) crGrid.innerHTML = CREATORS.map(c => `
-  <a class="cr spot" href="${c.url}" target="_blank" rel="noopener" aria-label="${c.name} on YouTube (opens in a new tab)">
-    <span class="cr-av" aria-hidden="true">${c.name.replace(/[^a-z0-9]/gi, '').slice(0, 2).toUpperCase()}</span>
-    <span class="cr-txt"><b>@${c.name}</b><small>YouTube channel ↗</small></span>
-  </a>`).join('');
+if (crGrid && CREATORS.length) {
+  crGrid.innerHTML = CREATORS.map(c => {
+    const chip = `<span>${c.title}<img src="${c.avatar}" alt="" width="64" height="64" loading="lazy" decoding="async"></span>`;
+    return `<div class="flow-item">
+    <a class="flow-link" href="${c.url}" target="_blank" rel="noopener" aria-label="${c.title} on YouTube${c.subs ? ', ' + c.subs + ' subscribers' : ''} (opens in a new tab)">
+      <img src="${c.avatar}" alt="${c.title} YouTube profile picture" width="52" height="52" loading="lazy" decoding="async">
+      <span class="flow-name">${c.title}</span>
+      <span class="flow-subs">${c.subs ? `${c.subs}<small>subscribers</small>` : '<small>YouTube ↗</small>'}</span>
+    </a>
+    <div class="flow-band" aria-hidden="true"><div class="flow-track">${chip.repeat(12)}</div></div>
+  </div>`;
+  }).join('');
+  /* FlowingMenu: the band slides in from whichever edge the pointer entered */
+  crGrid.addEventListener('pointerover', e => {
+    const it = e.target.closest('.flow-item'); if (!it || it.contains(e.relatedTarget)) return;
+    const r = it.getBoundingClientRect(), band = $('.flow-band', it);
+    band.style.transition = 'none'; band.classList.toggle('from-top', e.clientY - r.top < r.height / 2);
+    band.offsetWidth; band.style.transition = '';
+  });
+}
 else $('#creators') && $('#creators').remove();
 
 /* ---------- socials (real brand icons) ---------- */
@@ -425,11 +452,10 @@ document.addEventListener('click', e => {
   if (v) { track(v.classList.contains('reel') ? 'hero_reel_open' : 'video_open', { video: v.dataset.vid || 'hero' }); return openModal({ src: v.dataset.open, w: +v.dataset.w, h: +v.dataset.h }); }
   const im = e.target.closest('[data-img]');
   if (im) { if (im.dataset.case) track('case_study_open', { id: im.dataset.case }); return openModal({ img: im.dataset.img }); }
-  if (e.target.closest('.video-slot')) openModal({});
 });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') return closeModal();
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-open],[data-img],.video-slot')) { e.preventDefault(); e.target.click(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-open],[data-img]')) { e.preventDefault(); e.target.click(); }
 });
 modal.addEventListener('click', e => { if (e.target === modal || e.target.closest('.modal-x')) closeModal(); });
 
@@ -438,7 +464,7 @@ const heroV = $('#heroVideo');
 let heroVisible = false;
 function heroPause() { heroV && heroV.pause(); }
 function heroCheck() {
-  if (!heroV || reduce) return;
+  if (!heroV || reduce || LOWPERF) return;
   if (heroVisible && !document.hidden && !modal.classList.contains('open')) {
     if (!heroV.getAttribute('src')) heroV.src = heroV.dataset.src;
     heroV.play().catch(() => {});
@@ -552,18 +578,10 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
   requestAnimationFrame(loop);
 })();
 
-/* ---------- process steps ⇄ stacked cards ---------- */
+/* ---------- process steps (click or scroll) ---------- */
 (function process() {
-  const steps = $$('.step'), cards = $$('.stack-card');
-  const set = idx => {
-    steps.forEach((s, i) => s.classList.toggle('active', i <= idx));
-    cards.forEach((c, i) => {
-      const d = i - idx;
-      c.style.zIndex = 10 - Math.abs(d);
-      c.style.opacity = d < 0 || d > 2 ? 0 : 1 - d * .28;
-      c.style.transform = d < 0 ? 'translateY(-40px) scale(1.04)' : `translateY(${d * 22}px) scale(${1 - d * .06})`;
-    });
-  };
+  const steps = $$('.step');
+  const set = idx => steps.forEach((s, i) => s.classList.toggle('active', i <= idx));
   set(0);
   steps.forEach((s, i) => s.addEventListener('click', () => set(i)));
   if (hasGsap) ScrollTrigger.create({ trigger: '.steps', start: 'top 70%', end: 'bottom 45%', onUpdate: self => set(Math.min(steps.length - 1, Math.floor(self.progress * steps.length))) });
@@ -594,7 +612,9 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
     requestAnimationFrame(f);
   };
   const cObs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { $$('.count', e.target).forEach(count); cObs.unobserve(e.target); } }), { threshold: .2 });
-  if (reduce) $$('.count').forEach(c => c.textContent = c.dataset.to); else cObs.observe($('.stats'));
+  // Real values are in the HTML for first paint / no-JS; only count up if the stats start below the fold.
+  const st = $('.stats');
+  if (!reduce && st && st.getBoundingClientRect().top > innerHeight) cObs.observe(st);
 
   if (!hasGsap || reduce) return;
 
@@ -609,7 +629,7 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
     .from('.monitor', { y: 50, opacity: 0, duration: 1.3 }, .25)
     .from('.timeline', { y: 30, opacity: 0, duration: 1 }, '<.2');
 
-  const groups = ['.sec-head', '.who-card', '.who-copy', '.fb', '.plan', '.cmp-col', '.cta-strip', '.qa', '.est', '.socials', '.feat', '.process-copy .h2', '.foot-grid > div', '.stats-row', '.wins-head'];
+  const groups = ['.sec-head', '.who-card', '.who-copy', '.tm', '.flow-item', '.plan', '.cmp-col', '.cta-strip', '.qa', '.est', '.socials', '.feat', '.process-copy .h2', '.foot-grid > div', '.stats-row', '.wins-head'];
   // reveal via IntersectionObserver — immune to layout shifts from lazy media
   const revObs = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
@@ -645,23 +665,18 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
   addEventListener('load', () => ScrollTrigger.refresh());
 })();
 
-/* ---------- RAW_FOOTAGE card: playhead travel width + timecode (decorative) ---------- */
-(function rawCard() {
-  const tl = $('.raw-tl'), tc = $('.raw-tc'); if (!tl) return;
-  const set = () => tl.style.setProperty('--rw', tl.clientWidth + 'px');
-  set(); new ResizeObserver(set).observe(tl);
-  if (reduce || !tc) return;
-  const t0 = performance.now();
-  setInterval(() => { const s = ((performance.now() - t0) % 9000) / 9000 * 60; tc.textContent = `00:00:${String(Math.floor(s)).padStart(2, '0')}:${String(Math.floor((s % 1) * 24)).padStart(2, '0')}`; }, 125);
-})();
-
-/* ---------- process video: keep the loop running on every device ---------- */
-(function processVideo() {
-  const v = $('.process-video'); if (!v) return;
-  v.muted = true; // iOS/Android only autoplay muted video
-  const play = () => { const p = v.play(); if (p) p.catch(() => {}); };
-  v.addEventListener('ended', () => { v.currentTime = 0; play(); }); // fallback if `loop` is ignored
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) play(); });
-  ['touchstart', 'click'].forEach(e => addEventListener(e, play, { once: true, passive: true })); // iOS Low Power Mode blocks autoplay until a gesture
-  play();
+/* ---------- process: the "edit bay" panel mirrors the active step ---------- */
+(function editBay() {
+  const bay = $('.bay'); if (!bay) return;
+  const label = $('.bay-step', bay), pct = $('.bay-pct', bay), fill = $('.bay-fill', bay);
+  const names = $$('.step h3').map(h => h.textContent);
+  const obs = new MutationObserver(() => {
+    const idx = $$('.step.active').length - 1;
+    bay.dataset.step = idx;
+    label.textContent = names[idx] || '';
+    const p = Math.round(((idx + 1) / names.length) * 100);
+    pct.textContent = p + '%'; fill.style.transform = `scaleX(${p / 100})`;
+  });
+  $$('.step').forEach(s => obs.observe(s, { attributes: true, attributeFilter: ['class'] }));
+  bay.dataset.step = 0; label.textContent = names[0]; pct.textContent = '20%'; fill.style.transform = 'scaleX(.2)';
 })();
