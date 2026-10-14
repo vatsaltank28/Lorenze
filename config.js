@@ -27,7 +27,7 @@ const CONTACT = {
 /* ---------- Availability (client-provided claim — edit freely) ---------- */
 const AVAILABILITY = {
   label: 'Online 24/7',
-  typicalReply: '~10 minutes', // an estimate, not a guarantee
+  typicalReply: '10 minutes', // an estimate, not a guarantee
 };
 
 /* ---------- Pricing (PDF) — starting references only ---------- */
