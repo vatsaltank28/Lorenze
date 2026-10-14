@@ -266,9 +266,9 @@
     <div class="sec-head">
       <p class="eyebrow"><span class="secnum">05</span> Client feedback</p>
       <h2 class="h2">What creators say about <span class="blue">working with me.</span></h2>
-      <p class="body muted">Straight from the creators I've worked with — copied word-for-word from our DMs. Tap “View chat” to see the original message.</p>
+      <p class="body muted">Real messages from the creators I've worked with — unedited screenshots from our DMs. Tap one to see it full size.</p>
     </div>
-    <div class="tm-grid" id="fbGrid"></div>
+    <div class="shot-grid" id="fbGrid"></div>
   </div>
 </section>
 
@@ -419,6 +419,27 @@
         <p class="est-note" id="estNote"></p>
       </aside>
     </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER (Formspree — set NEWSLETTER.formspreeId in config.js) -->
+<section class="container nl-wrap" aria-labelledby="nlTitle">
+  <div class="nl spot">
+    <div>
+      <p class="eyebrow">Newsletter</p>
+      <h2 class="h2" id="nlTitle">Editing tips that <span class="blue">grow channels.</span></h2>
+      <p class="body muted">Retention tricks, hook ideas and behind-the-scenes from my edits. No spam — unsubscribe any time.</p>
+    </div>
+    <form id="nlForm" class="nl-form" novalidate>
+      <label class="sr" for="nlEmail">Email address</label>
+      <div class="nl-row">
+        <input id="nlEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="200">
+        <button type="submit" class="btn btn-blue">Subscribe</button>
+      </div>
+      <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="hidden" name="_subject" value="New newsletter signup — Devereux Edits">
+      <p class="nl-status" role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 </main>

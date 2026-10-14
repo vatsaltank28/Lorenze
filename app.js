@@ -221,18 +221,39 @@ $('#winsTrack').innerHTML = CASE_STUDIES.filter(c => c.permission).map(c => `
       ${c.testimonial ? `<blockquote>“${c.testimonial}”</blockquote>` : ''}
     </div>
   </article>`).join('');
-const STARS = '<span class="stars" aria-label="5 out of 5">★★★★★</span>';
-$('#fbGrid').innerHTML = TESTIMONIALS.map((f, i) => `
-  <figure class="tm spot${i === 0 ? ' tm-lead' : ''}">
-    <span class="tm-q" aria-hidden="true">“</span>
-    ${STARS}
-    <blockquote>${f.quote}</blockquote>
-    <figcaption>
-      <span class="avatar" aria-hidden="true">${(f.showName ? f.name : 'C')[0].toUpperCase()}</span>
-      <div><b>${f.showName ? f.name : 'Client'}</b><small>${f.context}</small></div>
-      <button type="button" class="tm-proof" data-img="${f.img}" aria-label="View the original Discord message from ${f.showName ? f.name : 'this client'}">View chat ↗</button>
-    </figcaption>
+/* client feedback: the original screenshots, nothing re-typed */
+$('#fbGrid').innerHTML = TESTIMONIALS.map(f => `
+  <figure class="shot spot">
+    <button type="button" class="shot-img" data-img="${f.img}" aria-label="Enlarge message from ${f.showName ? f.name : 'a client'}: “${f.quote}”">
+      <img src="${f.img}" alt="Discord message from ${f.showName ? f.name : 'a client'}: “${f.quote}”" loading="lazy" decoding="async">
+    </button>
+    <figcaption><b>${f.showName ? f.name : 'Client'}</b><small>${f.context}</small></figcaption>
   </figure>`).join('');
+
+/* ---------- newsletter (Formspree) ---------- */
+(function newsletter() {
+  const form = $('#nlForm'); if (!form) return;
+  const status = $('.nl-status', form), btn = $('button', form);
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = 'Please enter a valid email address.'; form.email.focus(); return; }
+    if (form._gotcha.value) return; // bot
+    if (!NEWSLETTER.formspreeId) { status.textContent = 'Signups open soon — message us on WhatsApp or Discord in the meantime.'; return; }
+    btn.disabled = true; btn.textContent = 'Joining…';
+    try {
+      const r = await fetch(`https://formspree.io/f/${NEWSLETTER.formspreeId}`, {
+        method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form),
+      });
+      if (!r.ok) throw new Error();
+      form.reset(); status.textContent = '✓ You’re in! Watch your inbox.'; btn.textContent = 'Joined ✓';
+      track('newsletter_signup');
+    } catch {
+      status.textContent = 'Couldn’t sign you up right now — please try again in a minute.';
+      btn.disabled = false; btn.textContent = 'Subscribe';
+    }
+  });
+})();
 
 /* ---------- creators worked with ---------- */
 const crGrid = $('#crGrid');
@@ -629,7 +650,7 @@ if (fine && !reduce) $$('.magnet').forEach(b => {
     .from('.monitor', { y: 50, opacity: 0, duration: 1.3 }, .25)
     .from('.timeline', { y: 30, opacity: 0, duration: 1 }, '<.2');
 
-  const groups = ['.sec-head', '.who-card', '.who-copy', '.tm', '.flow-item', '.plan', '.cmp-col', '.cta-strip', '.qa', '.est', '.socials', '.feat', '.process-copy .h2', '.foot-grid > div', '.stats-row', '.wins-head'];
+  const groups = ['.sec-head', '.who-card', '.who-copy', '.shot', '.nl', '.flow-item', '.plan', '.cmp-col', '.cta-strip', '.qa', '.est', '.socials', '.feat', '.process-copy .h2', '.foot-grid > div', '.stats-row', '.wins-head'];
   // reveal via IntersectionObserver — immune to layout shifts from lazy media
   const revObs = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;

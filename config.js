@@ -144,8 +144,12 @@ const TESTIMONIALS = [
   { img: 'assets/img/fb-2.jpg', quote: 'Your edits are breathtaking', name: 'SoulsLikeGamer', showName: true, context: 'Discord DM' },
   { img: 'assets/img/fb-1.jpg', quote: 'Looks good bro. Already better then the previous video', name: 'pabloNFFLS', showName: true, context: 'Discord DM · feedback on a work-in-progress edit' },
   { img: 'assets/img/fb-6.jpg', quote: 'Video looks good bro', name: 'pabloNFFLS', showName: true, context: 'Discord DM · after delivery' },
-  { img: 'assets/img/fb-3.jpg', quote: 'Thank you … Later today ill add all socials to my yt', name: 'FizzyRipz', showName: true, context: 'Discord DM' },
 ];
+
+/* ---------- Newsletter (Formspree) ----------
+   Paste your Formspree form ID (the part after /f/ in https://formspree.io/f/xxxxxxxx).
+   Leave '' and the signup form explains it isn't live yet instead of failing silently. */
+const NEWSLETTER = { formspreeId: '' };
 
 /* ---------- Creators worked with (from "Devereux Edits website Workflow 2") ----------
    title = channel name, avatar = official YouTube profile picture (assets/img/creators),

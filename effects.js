@@ -8,13 +8,13 @@
   const rich = !reduce && !window.LOWPERF; // heavy, purely decorative effects
 
   /* ---------- StarBorder: light that travels around key blocks ---------- */
-  $$('.plan, .who-card, .cta-strip, .bay, .tm-lead, .est').forEach(el => {
+  $$('.plan, .who-card, .cta-strip, .bay, .nl, .est').forEach(el => {
     el.classList.add('star');
     el.insertAdjacentHTML('afterbegin', '<i class="sb sb-b" aria-hidden="true"></i><i class="sb sb-t" aria-hidden="true"></i>');
   });
 
   /* ---------- GlareHover: diagonal sheen on media cards ---------- */
-  const addGlare = root => $$('.vc, .win-card, .tm', root).forEach(el => {
+  const addGlare = root => $$('.vc, .win-card, .shot', root).forEach(el => {
     if (!el.querySelector(':scope > .glare')) el.insertAdjacentHTML('beforeend', '<i class="glare" aria-hidden="true"></i>');
   });
   addGlare(document);
@@ -22,7 +22,7 @@
     .observe($('main'), { childList: true, subtree: true });
 
   /* ---------- MagicBento: border glow + particles + tilt on blocks ---------- */
-  $$('.cmp-col, .tm, .win-card, .plan').forEach(el => el.classList.add('bento', 'spot'));
+  $$('.cmp-col, .shot, .win-card, .plan, .nl').forEach(el => el.classList.add('bento', 'spot'));
   if (fine && rich) {
     document.addEventListener('pointerover', e => {
       const c = e.target.closest('.bento'); if (!c || c.contains(e.relatedTarget)) return;
