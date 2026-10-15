@@ -33,8 +33,8 @@ const AVAILABILITY = {
 /* ---------- Pricing (PDF) — starting references only ---------- */
 const PRICING = {
   currency: 'USD',
-  shortFrom: 9.99,
-  longFrom: 29.99,
+  shortFrom: 14.99,
+  longFrom: 39.99,
   note: 'Final pricing depends on video length, complexity and edit style.',
 };
 
@@ -169,7 +169,7 @@ const NICHES = ['Roblox', 'Commentary', 'UGC', 'Brands & Businesses', 'Grow a Ga
 const FAQ = [
   ["What is Devereux Edits?", "Devereux Edits is a video-editing agency for YouTubers, content creators, gaming channels, Roblox, Minecraft, ranking, commentary, UGC, brands, businesses and service providers. Every edit is built for watch time and audience retention."],
   ["Do you edit Roblox and Minecraft videos?", "Yes. Gaming is my core focus. I edit Roblox content (including trending titles like Grow a Garden and Steal a Brainrot), Minecraft videos, and gaming YouTube channels of all sizes — both long form and short form."],
-  ["How much do you charge?", "Short-form videos start from $9.99 and long-form videos start from $29.99. Final pricing depends on video length, complexity, and edit style. Send me your channel and requirements for a detailed quote."],
+  ["How much do you charge?", "Short-form videos start from $14.99 and long-form videos start from $39.99. Monthly packages start at $99/month (Starter), $199/month (Growth) and $349/month (Creator Pro). Final pricing depends on video length, complexity, and edit style. Send me your channel and requirements for a detailed quote."],
   ["Do you work on a monthly contract basis?", "Yes. Message me to book a free 15-minute call so we can design the right monthly setup for your channel."],
   ["Do you do test edits or free samples?", "For bulk and monthly orders I offer a paid sample first. I don't provide free samples due to limited availability. You can review my existing work above to see the quality and style in each niche."],
   ["How do I know you're legit?", "I'm verified with both a verified role and verified service role across major Discord editing servers. You can also review my work, client results, and testimonials on this page."],

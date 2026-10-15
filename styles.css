@@ -728,3 +728,23 @@ figcaption small{display:block;color:var(--gray)}
 
 /* process panel follows the steps on desktop */
 @media (min-width:1025px){.process-grid{align-items:start}.process-visual{position:sticky;top:120px}}
+
+/* ---------- brand logo, monthly packages, add-ons ---------- */
+.logo-img{display:block;height:30px;width:auto}
+.foot-grid .logo-img{height:34px}
+.monthly-head{margin-top:80px}
+.monthly-head .h3{font-family:var(--display);font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;margin-bottom:10px}
+.monthly-head a{color:var(--blue-hi);text-decoration:underline;text-underline-offset:3px}
+.plans-3{grid-template-columns:repeat(3,1fr);max-width:1120px}
+.plans-3 .plan{padding:30px}
+.plans-3 .price{font-size:42px}
+.addons{max-width:720px;margin:28px auto 0;border:1px solid var(--line-2);border-radius:22px;padding:28px 32px;background:var(--black-2)}
+.addons h3{font-family:var(--display);font-size:20px;letter-spacing:-.02em;margin-bottom:12px}
+.addons table{width:100%;border-collapse:collapse}
+.addons th{color:var(--gray);font-weight:600;font-size:14px;text-align:left;padding:10px 0;border-bottom:1px solid var(--line)}
+.addons td{padding:13px 0;border-bottom:1px solid var(--line);color:#d6d8dc}
+.addons tr:last-child td{border-bottom:0}
+.addons th:last-child,.addons td:last-child{text-align:right;white-space:nowrap;padding-left:16px}
+.addons td:last-child{font-family:var(--display);font-weight:700;color:#fff}
+@media (max-width:1024px){.plans-3{grid-template-columns:1fr;max-width:520px}}
+@media (max-width:640px){.logo-img{height:24px}.monthly-head{margin-top:56px}.addons{padding:22px 20px}}
